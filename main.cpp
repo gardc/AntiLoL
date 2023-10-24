@@ -4,7 +4,7 @@
 #include <thread>
 
 #include "Processes.h"
-#include "StartupManager.h"
+#include "Startup.h"
 
 // Global variables are generally to be avoided, but this is a quick n dirty program that won't be expanded upon... hopefully.
 
@@ -41,10 +41,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			GetCursorPos(&pt);
 			HMENU hMenu = CreatePopupMenu();
 
-			runOnStartup = IsSetToRunOnStartup();  // Check current status
+			// Get menu state and ensure correct startup path if needed
+			runOnStartup = IsSetToRunOnStartup();
+
+			// Add menu items
 			AppendMenu(hMenu, MF_STRING | (runOnStartup ? MF_CHECKED : MF_UNCHECKED), ID_RUN_ON_STARTUP, L"Run on System Startup");
 			AppendMenu(hMenu, MF_STRING, ID_QUIT, L"Quit");
 
+			// Make the menu visible
 			SetForegroundWindow(hWnd);
 			TrackPopupMenu(hMenu, TPM_RIGHTALIGN | TPM_BOTTOMALIGN, pt.x, pt.y, 0, hWnd, NULL);
 			DestroyMenu(hMenu);
@@ -54,15 +58,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	case WM_COMMAND:
 		if (LOWORD(wParam) == ID_RUN_ON_STARTUP) {
 			if (runOnStartup) {
-				RemoveFromStartup();  // This function removes your app from startup. It's similar to AddToStartup but uses RegDeleteValue.
+				RemoveFromStartup();
 			}
 			else {
 				AddToStartup();
 			}
-			runOnStartup = !g_bRunOnStartup;  // Toggle the status
+			runOnStartup = !runOnStartup;  // Toggle the status
 		}
 		else if (LOWORD(wParam) == ID_QUIT) {
-			// Your quit logic here...
+			stopThreadSignal = true;
+			PostMessage(hWnd, WM_CLOSE, 0, 0);
 		}
 		break;
 
@@ -131,6 +136,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	// spawn the process checker thread
 	lolProcessCheckerThread = std::thread(LoLProcessChecker);
+
+	// ensure correct startup path, if enabled
+	EnsureCorrectStartupPath();
 
 	MSG msg = {};
 	while (GetMessage(&msg, NULL, 0, 0)) {

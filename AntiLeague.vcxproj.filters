@@ -21,7 +21,7 @@
     <ClCompile Include="Processes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StartupManager.cpp">
+    <ClCompile Include="Startup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ClInclude Include="Processes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StartupManager.h">
+    <ClInclude Include="Startup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

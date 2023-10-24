@@ -135,7 +135,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Processes.cpp" />
-    <ClCompile Include="StartupManager.cpp" />
+    <ClCompile Include="Startup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="main.go" />
@@ -143,7 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Processes.h" />
-    <ClInclude Include="StartupManager.h" />
+    <ClInclude Include="Startup.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
